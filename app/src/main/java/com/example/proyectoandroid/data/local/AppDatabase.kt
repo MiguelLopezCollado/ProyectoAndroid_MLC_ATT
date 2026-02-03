@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase
 /**
  * Base de datos principal de la aplicación usando Room.
  * Define las entidades y la versión de la base de datos.
+ * ww
  */
 @Database(entities = [Contacto::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
