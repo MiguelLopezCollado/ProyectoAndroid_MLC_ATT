@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -59,8 +60,13 @@ fun ContactListScreen(navController: NavHostController,viewModel: MainViewModel)
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(state.contactos) { contacto ->
-                ContactItem(contacto = contacto, context = context)
+                ContactItem(
+                    contacto = contacto, 
+                    context = context,
+                    onDelete = { viewModel.deleteContacto(contacto) }
+                )
             }
+
         }
 
         if (state.isLoading) {
@@ -89,7 +95,7 @@ fun ContactListScreen(navController: NavHostController,viewModel: MainViewModel)
 
 
 @Composable
-fun ContactItem(contacto: Contacto, context: Context) {
+fun ContactItem(contacto: Contacto, context: Context, onDelete: () -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -117,6 +123,15 @@ fun ContactItem(contacto: Contacto, context: Context) {
                 Text(text = contacto.name, style = MaterialTheme.typography.titleMedium)
                 Text(text = contacto.email, style = MaterialTheme.typography.bodySmall)
                 Text(text = contacto.phone, style = MaterialTheme.typography.bodySmall)
+            }
+
+            // Botón Eliminar
+            IconButton(onClick = onDelete) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Eliminar",
+                    tint = Color.Red
+                )
             }
 
             // Botón Llamar
@@ -156,6 +171,8 @@ fun ContactItem(contacto: Contacto, context: Context) {
                     tint = Color(0xFF03EEB5) // Color WhatsApp
                 )
             }
+            
+
         }
     }
 }

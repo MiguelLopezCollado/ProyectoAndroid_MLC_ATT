@@ -45,10 +45,12 @@ class ContactoRepository(
             }
 
             // 3. Insertar en base de datos local (reemplaza si hay conflictos no manejados por ID, pero aquí son nuevos insert)
-            // Nota: Como no tenemos ID único desde la API que mapee a nuestra DB,
-            // simplemente agregamos. Si quisiéramos borrar los anteriores, podríamos llamar a deleteAll() antes.
-            // Para este ejercicio, acumulamos.
+            // 3. Insertar en base de datos local
             contactoDao.insertAll(nuevosContactos)
         }
+    }
+
+    suspend fun deleteContacto(contacto: Contacto) {
+        contactoDao.delete(contacto)
     }
 }

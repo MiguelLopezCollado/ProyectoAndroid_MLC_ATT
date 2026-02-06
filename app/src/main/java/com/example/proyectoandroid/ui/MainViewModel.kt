@@ -67,8 +67,17 @@ class MainViewModel(
         }
     }
 
+    fun deleteContacto(contacto: Contacto) {
+        viewModelScope.launch {
+             try {
+                repository.deleteContacto(contacto)
+            } catch (e: Exception) {
+                _error.value = "Error al eliminar: ${e.message}"
+            }
+        }
+    }
 
-     //Factory para crear instancias de MainViewModel.
+    //Factory para crear instancias de MainViewModel.
 
     class Factory(
         private val repository: ContactoRepository,

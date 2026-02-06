@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Delete
 import kotlinx.coroutines.flow.Flow
 
 
@@ -20,10 +21,8 @@ interface ContactoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(contactos: List<Contacto>)
+
+    @Delete
+    suspend fun delete(contacto: Contacto)
     
-    /**
-     * Elimina todos los contactos de la base de datos.
-     */
-    @Query("DELETE FROM contactos")
-    suspend fun deleteAll()
 }
