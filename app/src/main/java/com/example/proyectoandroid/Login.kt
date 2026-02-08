@@ -63,7 +63,7 @@ fun LoginScreen(navController: NavHostController) {
         Button(
             onClick = { navController.navigate("Home") }, // Navega a la pantalla "Home"
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(Color.Green, Color.Black)
+            colors = ButtonDefaults.buttonColors(Color.Red, Color.Black)
             // enabled = username.isNotBlank() && password.isNotBlank() // Está desactivado para pruebas
         ) {
             Text("Iniciar Sesión")
