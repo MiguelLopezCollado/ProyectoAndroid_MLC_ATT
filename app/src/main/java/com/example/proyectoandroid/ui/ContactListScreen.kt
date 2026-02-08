@@ -11,11 +11,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +34,8 @@ import com.example.proyectoandroid.data.local.Contacto
 fun ContactListScreen(navController: NavHostController,viewModel: MainViewModel) {
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    var editingContact by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<Contacto?>(null) }
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         // Banner de "Sin Conexión"
@@ -63,7 +67,8 @@ fun ContactListScreen(navController: NavHostController,viewModel: MainViewModel)
                 ContactItem(
                     contacto = contacto, 
                     context = context,
-                    onDelete = { viewModel.deleteContacto(contacto) }
+                    onDelete = { viewModel.deleteContacto(contacto) },
+                    onEdit = { editingContact = contacto }
                 )
             }
 
@@ -90,12 +95,23 @@ fun ContactListScreen(navController: NavHostController,viewModel: MainViewModel)
         ) {
             Text("Importar Contactos")
         }
+
+        if (editingContact != null) {
+            EditContactDialog(
+                contacto = editingContact!!,
+                onDismiss = { editingContact = null },
+                onSave = { name, phone ->
+                    viewModel.updateContacto(editingContact!!.copy(name = name, phone = phone))
+                    editingContact = null
+                }
+            )
+        }
     }
 }
 
 
 @Composable
-fun ContactItem(contacto: Contacto, context: Context, onDelete: () -> Unit) {
+fun ContactItem(contacto: Contacto, context: Context, onDelete: () -> Unit, onEdit: () -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -131,6 +147,15 @@ fun ContactItem(contacto: Contacto, context: Context, onDelete: () -> Unit) {
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Eliminar",
                     tint = Color.Red
+                )
+            }
+
+            // Botón Editar
+            IconButton(onClick = onEdit) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Editar",
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -176,3 +201,48 @@ fun ContactItem(contacto: Contacto, context: Context, onDelete: () -> Unit) {
         }
     }
 }
+
+@Composable
+fun EditContactDialog(
+    contacto: Contacto,
+    onDismiss: () -> Unit,
+    onSave: (String, String) -> Unit
+) {
+    var name by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(contacto.name) }
+    var phone by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(contacto.phone) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Editar Contacto") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Nombre") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = phone,
+                    onValueChange = { phone = it },
+                    label = { Text("Teléfono") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            Button(onClick = { onSave(name, phone) }) {
+                Text("Guardar")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancelar")
+            }
+        }
+    )
+}
+
+
+

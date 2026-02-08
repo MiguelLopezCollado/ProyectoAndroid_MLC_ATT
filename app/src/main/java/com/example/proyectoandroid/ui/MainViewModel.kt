@@ -77,6 +77,18 @@ class MainViewModel(
         }
     }
 
+    fun updateContacto(contacto: Contacto) {
+        viewModelScope.launch {
+            try {
+                repository.updateContacto(contacto)
+            } catch (e: Exception) {
+                _error.value = "Error al actualizar: ${e.message}"
+            }
+        }
+    }
+
+
+
     //Factory para crear instancias de MainViewModel.
 
     class Factory(

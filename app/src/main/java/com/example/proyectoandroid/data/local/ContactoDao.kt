@@ -24,5 +24,10 @@ interface ContactoDao {
 
     @Delete
     suspend fun delete(contacto: Contacto)
+
+    @androidx.room.Update
+    suspend fun update(contacto: Contacto)
+
+
     
 }

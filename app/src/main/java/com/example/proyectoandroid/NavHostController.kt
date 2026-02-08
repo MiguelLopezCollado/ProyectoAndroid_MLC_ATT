@@ -14,6 +14,7 @@ import com.example.proyectoandroid.ui.ContactListScreen
 import com.example.proyectoandroid.LoginScreen
 import com.example.proyectoandroid.ui.MainViewModel
 import com.example.proyectoandroid.utils.NetworkConnectivityObserver
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

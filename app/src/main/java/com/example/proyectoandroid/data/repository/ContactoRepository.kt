@@ -53,4 +53,10 @@ class ContactoRepository(
     suspend fun deleteContacto(contacto: Contacto) {
         contactoDao.delete(contacto)
     }
+
+    suspend fun updateContacto(contacto: Contacto) {
+        contactoDao.update(contacto)
+    }
+
+
 }
