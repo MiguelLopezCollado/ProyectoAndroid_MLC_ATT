@@ -11,8 +11,6 @@ import kotlinx.coroutines.withContext
  * Repositorio que gestiona la fuente de datos de Contactos.
  * Coordina la obtención de datos desde la API remota y su almacenamiento local.
  *
- * @property contactoDao DAO para acceso a la base de datos local.
- * @property api Cliente de Retrofit para acceso a la API remota.
  */
 class ContactoRepository(
     private val contactoDao: ContactoDao,
@@ -31,10 +29,10 @@ class ContactoRepository(
    **/
     suspend fun importarContactos(cantidad: Int = 10) {
         withContext(Dispatchers.IO) {
-            // 1. Obtener datos de la API
+            // Obtener datos de la API
             val response = api.getUsers(results = cantidad)
             
-            // 2. Mapear DTOs a Entidades
+            // Mapear DTOs a Entidades
             val nuevosContactos = response.results.map { dto ->
                 Contacto(
                     name = "${dto.name.first} ${dto.name.last}",
@@ -44,8 +42,8 @@ class ContactoRepository(
                 )
             }
 
-            // 3. Insertar en base de datos local (reemplaza si hay conflictos no manejados por ID, pero aquí son nuevos insert)
             // 3. Insertar en base de datos local
+
             contactoDao.insertAll(nuevosContactos)
         }
     }
